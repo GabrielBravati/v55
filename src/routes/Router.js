@@ -138,9 +138,10 @@ const Router = [
     children: [
       { path: '/', element: <Navigate to="/dashboards/modern" /> },
       { path: '/dashboards/modern', exact: true, element: <ModernDash /> },
-
       { path: '/categorias', element: <Listar /> },
       { path: '/categorias/cadastrar', element: <Formulario />},
+      { path: '/categorias/:id', element: <Formulario />},
+
       { path: '/briefing/listar', element: <BriefingListar />},
       
 
@@ -240,7 +241,6 @@ const Router = [
     element: <BlankLayout />,
     children: [
       { path: '/auth/404', element: <Error /> },
-      
       { path: '/auth/login2', element: <Login2 /> },
       { path: '/auth/register2', element: <Register2 /> },
       { path: '/auth/forgot-password2', element: <ForgotPassword2 /> },

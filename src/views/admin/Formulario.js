@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Checkbox, TextField, Box, Breadcrumbs, Link, Snackbar, Alert, Typography, Paper, FormControlLabel, Stack, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import {
+  Button, Checkbox, TextField, Box, Breadcrumbs, Link, Snackbar, Alert, Typography, Paper,
+  FormControlLabel, Stack, Divider, Accordion, AccordionSummary, AccordionDetails
+} from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ChromePicker } from 'react-color';
@@ -35,126 +38,211 @@ const ColorPickerButton = styled(Button)(({ theme, color }) => ({
   }
 }));
 
-const PreviewBox = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  backgroundColor: theme.palette.background.paper,
-  boxShadow: theme.shadows[2],
-  transition: 'all 0.3s ease',
-  '&:hover': { boxShadow: theme.shadows[6] }
-}));
-
 const Formulario = () => {
   const { id } = useParams();
+
   const [formData, setFormData] = useState({
-    nome: '', categoriaPai: '', urlAmigavel: '', descricao: '',
-    corFundo: '#ffffff', corHover: '#f5f5f5', corFonte: '#212121',
-    destaque: false, titulo: '', palavras_chave: '', descricao_seo: '',
-    configuracao_adicional: '', selo_id: '', cor_fundo: '#ffffff',
+    nome: '',
+    urlAmigavel: '',
+    descricao: '',
+    destaque: false,
+    corFundo: '#ffffff',
+    corHover: '#eeeeee',
+    corFonte: '#000000',
+    titulo: '',
+    palavras_chave: '',
+    descricao_seo: '',
+    cor_fundo: '#ffffff',
     cor_texto: '#000000'
   });
 
   const [urlError, setUrlError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [categorias, setCategorias] = useState([]);
-  const [snackbar, setSnackbar] = useState({
-    open: false, message: '', severity: 'success'
-  });
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
   const [colorPicker, setColorPicker] = useState({
     fundo: false, hover: false, fonte: false, seo_fundo: false, seo_texto: false
   });
 
-  const handleChange = (field) => (e) => {
-    const value = e.target.value;
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleChange = (field) => (event) => {
+    const value = event.target.value;
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: value
+    }));
+
     if (field === 'urlAmigavel') {
-      setUrlError(/^[a-z0-9-]+$/.test(value) ? '' : 'Apenas letras minúsculas, números e hífens');
+      const regex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+      setUrlError(regex.test(value) ? '' : 'URL deve conter apenas letras minúsculas, números e hífens');
     }
   };
 
-  const handleToggle = (field) => (e) => setFormData(prev => ({ ...prev, [field]: e.target.checked }));
+  const handleToggle = (field) => (event) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: event.target.checked
+    }));
+  };
+
   const handleColorChange = (field) => (color) => {
-    setFormData(prev => ({ ...prev, [field]: color.hex }));
-    setColorPicker(prev => ({ ...prev, [field.split('_').pop()]: false }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: color.hex
+    }));
   };
-  const toggleColorPicker = (field) => () => setColorPicker(prev => ({
-    ...prev, [field]: !prev[field]
-  }));
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsSubmitting(true);
-      try {
-        await Promise.all([
-          new Promise(resolve => setTimeout(() => {
-            setCategorias([{ id: 1, nome: "xxx" }, { id: 2, nome: "xxx" }, { id: 3, nome: "xxx" }]);
-            resolve();
-          }, 500)),
+  const toggleColorPicker = (pickerKey) => () => {
+    setColorPicker((prevState) => ({
+      ...prevState,
+      [pickerKey]: !prevState[pickerKey]
+    }));
+  };
 
-          id && new Promise(resolve => setTimeout(() => {
-            setFormData({
-              nome: `Categoria ${id}`, categoriaPai: "2", urlAmigavel: `categoria-${id}`,
-              descricao: `Descrição da categoria ${id}`, corFundo: '#f5f5f5',
-              corHover: '#eeeeee', corFonte: '#212121', destaque: true,
-              titulo: `Título SEO ${id}`, palavras_chave: 'palavra1, palavra2',
-              descricao_seo: `Descrição SEO para categoria ${id}`,
-              configuracao_adicional: 'Config adicional', selo_id: '123',
-              cor_fundo: '#f8f8f8', cor_texto: '#333333'
-            });
-            resolve();
-          }, 800))
-        ]);
-      } catch (error) {
-        setSnackbar({ open: true, message: 'Erro ao carregar dados', severity: 'error' });
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-    loadData();
-  }, [id]);
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.nome || !formData.urlAmigavel) {
-      setSnackbar({ open: true, message: "Preencha todos os campos obrigatórios", severity: "error" });
-      return;
-    }
-
     setIsSubmitting(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log("Dados enviados:", formData);
-      setSnackbar({ open: true, message: "Categoria salva com sucesso", severity: "success" });
-    } catch (error) {
-      setSnackbar({ open: true, message: "Erro ao salvar categoria", severity: "error" });
-    } finally {
+
+    setTimeout(() => {
+      console.log('Dados enviados:', formData);
       setIsSubmitting(false);
-    }
+      setSnackbar({ open: true, message: 'Categoria salva com sucesso!', severity: 'success' });
+    }, 1500);
   };
+
+  const renderColorField = (label, field, pickerKey) => (
+    <Box>
+      <Typography variant="body2" fontWeight="bold" mb={1}>{label}</Typography>
+      <ColorPickerButton
+        color={formData[field]}
+        variant="outlined"
+        onClick={toggleColorPicker(pickerKey)}
+      >
+        {formData[field]}
+      </ColorPickerButton>
+      {colorPicker[pickerKey] && (
+        <Box mt={2}>
+          <ChromePicker
+            color={formData[field]}
+            onChangeComplete={handleColorChange(field)}
+            disableAlpha
+          />
+        </Box>
+      )}
+    </Box>
+  );
 
   return (
     <MinimalFormContainer>
       <Stack spacing={3}>
-        <Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 1, boxShadow: 2 }}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
-            <Link underline="hover" color="inherit" href="dashboards/modern">Home</Link>
-            <Link underline="hover" color="inherit" href="categorias">Categorias</Link>
-            <Typography color="text.primary">Formulario</Typography>
-          </Breadcrumbs>
-          <Typography variant="h1" component="h1" mt={2} fontWeight="bold">
-            {id ? `Editar Categoria ${id}` : 'Formulario de Categoria'}
-          </Typography>
-        </Box>
+        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+          <Link underline="hover" color="inherit" href="/">Dashboard</Link>
+          <Link underline="hover" color="inherit" href="/categorias">Categorias</Link>
+          <Typography color="text.primary">{id ? 'Editar' : 'Cadastrar'} Categoria</Typography>
+        </Breadcrumbs>
+
+        <Typography variant="h4" fontWeight="bold">
+          {id ? 'Editar Categoria' : 'Nova Categoria'}
+        </Typography>
 
         <Divider sx={{ my: 2 }} />
 
         <Box component="form" onSubmit={handleSubmit}>
           <Stack spacing={4}>
+            <SectionAccordion defaultExpanded>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography fontWeight="bold">Informações Básicas</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={2}>
+                  <TextField
+                    label="Nome da Categoria"
+                    fullWidth
+                    value={formData.nome}
+                    onChange={handleChange('nome')}
+                  />
+                  <TextField
+                    label="URL Amigável"
+                    fullWidth
+                    value={formData.urlAmigavel}
+                    onChange={handleChange('urlAmigavel')}
+                    error={!!urlError}
+                    helperText={urlError}
+                  />
+                  <TextField
+                    label="Descrição"
+                    fullWidth
+                    multiline
+                    rows={3}
+                    value={formData.descricao}
+                    onChange={handleChange('descricao')}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={formData.destaque}
+                        onChange={handleToggle('destaque')}
+                      />
+                    }
+                    label="Destaque"
+                  />
+                </Stack>
+              </AccordionDetails>
+            </SectionAccordion>
+
+            <SectionAccordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography fontWeight="bold">Cores da Categoria</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={3}>
+                  {renderColorField("Cor de Fundo", "corFundo", "fundo")}
+                  {renderColorField("Cor do Hover", "corHover", "hover")}
+                  {renderColorField("Cor da Fonte", "corFonte", "fonte")}
+                </Stack>
+              </AccordionDetails>
+            </SectionAccordion>
+
+            <SectionAccordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography fontWeight="bold">SEO</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack spacing={2}>
+                  <TextField
+                    label="Título SEO"
+                    fullWidth
+                    value={formData.titulo}
+                    onChange={handleChange('titulo')}
+                  />
+                  <TextField
+                    label="Palavras-chave"
+                    fullWidth
+                    value={formData.palavras_chave}
+                    onChange={handleChange('palavras_chave')}
+                  />
+                  <TextField
+                    label="Descrição SEO"
+                    fullWidth
+                    multiline
+                    rows={3}
+                    value={formData.descricao_seo}
+                    onChange={handleChange('descricao_seo')}
+                  />
+                </Stack>
+              </AccordionDetails>
+            </SectionAccordion>
+
             <Box sx={{
               p: 3, bgcolor: 'background.paper', borderRadius: 1,
               boxShadow: 2, display: 'flex', justifyContent: 'flex-end'
             }}>
-              <Button variant="contained" type="submit" disabled={isSubmitting} size="large"
-                sx={{ boxShadow: 3, '&:hover': { boxShadow: 4 } }}>
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={isSubmitting}
+                size="large"
+                sx={{ boxShadow: 3, '&:hover': { boxShadow: 4 } }}
+              >
                 {isSubmitting ? 'Salvando...' : 'Salvar Categoria'}
               </Button>
             </Box>

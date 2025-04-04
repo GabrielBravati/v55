@@ -40,6 +40,10 @@ const StyledTable = styled(TableContainer)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   '& .MuiTableHead-root': {
     backgroundColor: theme.palette.grey[100]
+  },
+  '& .MuiTableRow-root:hover':{
+    backgroundColor: theme.palette.action.hover,
+    cursor:'pointer'
   }
 }));
 
@@ -98,7 +102,17 @@ const FormBase = ({
           <Link underline="hover" color="inherit" href="/">
             Home
           </Link>
-          <Typography color="text.primary">XXX</Typography>
+          {caminho?.map((item, index) => (
+            index === caminho.length - 1 ? (
+              <Typography key={index} color="text.primary">
+                {item}
+              </Typography>
+            ) : (
+              <Link key={index} underline="hover" color="inherit" href="#">
+                {item}
+              </Link>
+            )
+          ))}
         </Breadcrumbs>
 
         <Box sx={{ 
@@ -107,10 +121,9 @@ const FormBase = ({
           alignItems: 'center', 
           mb: 3 
         }}>
-          <Typography variant="h3" component="h1" sx={{ fontWeight: 600 }}>
+          <Typography variant="h2" component="h1" sx={{textTransform : 'uppercase', fontWeight: 1000 }}>
             {titulo}
           </Typography>
-
           <TextField
             label="Buscar"
             variant="outlined"
@@ -123,7 +136,6 @@ const FormBase = ({
             }}
           />
         </Box>
-
         <StyledTable component={Paper}>
           <Table>
             <TableHead>

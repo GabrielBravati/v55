@@ -8,9 +8,10 @@ const Categorias = () => {
 
   const colunas = [
     { id: 'nome', label: 'Nome' },
-    { id: 'pai', label: 'Categoria Pai' }
+    { id: 'campos', label: 'Campos' }
   ];
 
+  //Dados mockados
   const dados = Array.from({ length: 40 }, (_, i) => ({
     id: i + 1,
     nome: `Categoria ${i + 1}`,
