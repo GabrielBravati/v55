@@ -7,7 +7,7 @@ const SimpleBarStyle = styled(SimpleBar)(() => ({
   maxHeight: '100%',
   '.simplebar-scrollbar:before': { backgroundColor: '#2e2d348f' },
 }));
-
+    
 const Scrollbar = (props) => {
   const { children, sx, ...other } = props;
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(

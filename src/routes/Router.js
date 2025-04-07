@@ -7,6 +7,7 @@ import Loadable from '../layouts/full/shared/loadable/Loadable';
 const Listar = Loadable(lazy(() => import('../views/admin/Listar')));
 const Formulario = Loadable(lazy(() => import('../views/admin/Formulario')));
 const BriefingListar = Loadable(lazy(() => import('../views/admin/BriefingListar')));
+const BriefingCriar = Loadable(lazy(() => import('../views/admin/BriefingCriar')));
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -143,7 +144,8 @@ const Router = [
       { path: '/categorias/:id', element: <Formulario />},
 
       { path: '/briefing/listar', element: <BriefingListar />},
-      
+      { path: '/briefing/listar/cadastrar', element: <BriefingCriar />},
+
 
       { path: '/apps/chats', element: <Chats /> },
       { path: '/apps/notes', element: <Notes /> },

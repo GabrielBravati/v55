@@ -1,0 +1,93 @@
+import React from 'react';
+import {
+  Box,
+  Stack,
+  Paper,
+  Typography,
+  Breadcrumbs,
+  Link,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Button,
+} from '@mui/material';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ChromePicker } from 'react-color';
+import { styled } from '@mui/material/styles';
+
+export const FormWrapper = ({ title, breadcrumbs = [], children }) => {
+  return (
+    <Paper sx={{ p: 4, maxWidth: 1200, m: '0 auto', borderRadius: 2, boxShadow: 3 }}>
+      <Stack spacing={3}>
+        {breadcrumbs.length > 0 && (
+          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+            {breadcrumbs.map((crumb, index) => (
+              <Link key={index} underline="hover" color="inherit" href={crumb.href || '#'}>
+                {crumb.label}
+              </Link>
+            ))}
+          </Breadcrumbs>
+        )}
+
+        {title && <Typography variant="h2" fontWeight="bold">{title}</Typography>}
+
+        {children}
+      </Stack>
+    </Paper>
+  );
+};
+
+export const FormSection = ({ title, children, defaultExpanded = false }) => (
+  <Accordion defaultExpanded={defaultExpanded} sx={{ boxShadow: 1 }}>
+    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <Typography fontWeight="bold">{title}</Typography>
+    </AccordionSummary>
+    <AccordionDetails>
+      <Stack spacing={2}>{children}</Stack>
+    </AccordionDetails>
+  </Accordion>
+);
+
+const ColorPickerButton = styled(Button)(({ theme, color }) => ({
+  borderColor: color,
+  color: theme.palette.getContrastText(color),
+  backgroundColor: color,
+  boxShadow: theme.shadows[2],
+  '&:hover': {
+    backgroundColor: color,
+    opacity: 0.9,
+    boxShadow: theme.shadows[4]
+  }
+}));
+
+export const ColorField = ({ label, value, onClick, open, onChange }) => (
+  <Box>
+    <Typography variant="body2" fontWeight="bold" mb={1}>{label}</Typography>
+    <ColorPickerButton color={value} variant="outlined" onClick={onClick}>
+      {value}
+    </ColorPickerButton>
+    {open && (
+      <Box mt={2}>
+        <ChromePicker color={value} onChangeComplete={onChange} disableAlpha />
+      </Box>
+    )}
+  </Box>
+);
+
+export const SubmitButton = ({ isSubmitting, children = 'Salvar', ...props }) => (
+  <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 3 }}>
+    <Button
+      type="submit"
+      variant="contained"
+      disabled={isSubmitting}
+      size="large"
+      sx={{ boxShadow: 3, '&:hover': { boxShadow: 4 } }}
+      {...props}
+    >
+      {isSubmitting ? 'Salvando...' : children}
+    </Button>
+  </Box>
+);
+
+export default FormList;

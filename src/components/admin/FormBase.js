@@ -65,7 +65,8 @@ const FormBase = ({
   setLinhasPorPagina,
   selecionados,
   setSelecionados,
-  renderAcoes
+  renderAcoes,
+  children
 }) => {
   const [search, setSearch] = useState('');
 
@@ -136,6 +137,13 @@ const FormBase = ({
             }}
           />
         </Box>
+
+        {children && (
+          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            {children}
+          </Box>
+        )}
+
         <StyledTable component={Paper}>
           <Table>
             <TableHead>
@@ -166,14 +174,15 @@ const FormBase = ({
                     <TableCell key={col.id}>{item[col.id]}</TableCell>
                   ))}
                   <TableCell align="center">
-                    <ActionButton 
-                      variant="contained" 
-                      startIcon={<EditIcon />}
-                      size="small"
-                      color="primary"
-                    >
-                      Editar
-                    </ActionButton>
+                    {renderAcoes ? renderAcoes(item) : (
+                      <ActionButton 
+                        variant="contained" 
+                        startIcon={<EditIcon />}
+                        size="small"
+                        color="primary"
+                      >
+                        Editar
+                      </ActionButton>)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -181,7 +190,7 @@ const FormBase = ({
           </Table>
         </StyledTable>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 15]}
           component="div"
           count={dadosFiltrados.length}
           rowsPerPage={linhasPorPagina}
